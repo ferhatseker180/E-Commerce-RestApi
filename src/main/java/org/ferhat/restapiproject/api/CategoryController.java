@@ -62,4 +62,11 @@ public class CategoryController {
         this.categoryService.update(updateCategory);
         return ResultHelper.success(this.modelMapperService.forResponse().map(updateCategory, CategoryResponse.class));
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Result delete(@PathVariable("id") int id) {
+        this.categoryService.delete(id);
+        return ResultHelper.ok();
+    }
 }

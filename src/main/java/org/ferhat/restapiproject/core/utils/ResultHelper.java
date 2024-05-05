@@ -20,6 +20,10 @@ public class ResultHelper {
         return new ResultData<>(true, Message.OK, "200", data);
     }
 
+    public static Result ok(){
+        return new Result(true,Message.OK,"200");
+    }
+
     public static Result resultNotFoundError(String message) {
         return new Result(false, message, "404");
     }
