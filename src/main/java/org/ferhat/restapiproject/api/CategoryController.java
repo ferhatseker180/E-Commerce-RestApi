@@ -7,8 +7,11 @@ import org.ferhat.restapiproject.core.result.Result;
 import org.ferhat.restapiproject.core.result.ResultData;
 import org.ferhat.restapiproject.core.utils.ResultHelper;
 import org.ferhat.restapiproject.dto.request.category.CategorySaveRequest;
+import org.ferhat.restapiproject.dto.request.category.CategoryUpdateRequest;
+import org.ferhat.restapiproject.dto.response.CursorResponse;
 import org.ferhat.restapiproject.dto.response.category.CategoryResponse;
 import org.ferhat.restapiproject.entity.Category;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +40,26 @@ public class CategoryController {
         Category category = this.categoryService.get(id);
         CategoryResponse categoryResponse = this.modelMapperService.forResponse().map(category, CategoryResponse.class);
         return ResultHelper.success(categoryResponse);
+    }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CursorResponse<CategoryResponse>> cursor(
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
+
+        Page<Category> categoryPage = this.categoryService.cursor(page, pageSize);
+        Page<CategoryResponse> categoryResponsePage = categoryPage
+                .map(category -> this.modelMapperService.forResponse().map(category, CategoryResponse.class));
+
+        return ResultHelper.cursor(categoryResponsePage);
+    }
+
+    @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<CategoryResponse> update(@Valid @RequestBody CategoryUpdateRequest categoryUpdateRequest) {
+        Category updateCategory = this.modelMapperService.forRequest().map(categoryUpdateRequest, Category.class);
+        this.categoryService.update(updateCategory);
+        return ResultHelper.success(this.modelMapperService.forResponse().map(updateCategory, CategoryResponse.class));
     }
 }
