@@ -3,8 +3,6 @@ package org.ferhat.restapiproject.business.abstracts;
 import org.ferhat.restapiproject.entity.Category;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 public interface ICategoryService {
 
     Category save(Category category);
